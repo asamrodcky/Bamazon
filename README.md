@@ -8,10 +8,19 @@ For this application, we took the general skeleton for how a website/app like Am
 
 # Instructions
 ### Customer.js
+This is a Node.js application and thus has to be run in the bash/terminal on your computer.
+
+In order to use this app, you must type ```node bamazonCustomer.js``` in your terminal window.
+
+Upon initialization, the app will present you with a table of products in the database, with columns for product id #, name, price, and stock quantity. The app will then prompt you, as a customer, to pick an item to purchase from the table. It will then ask you how much of that item you would like to purchase. If there is not sufficient quantity for the item in question, you will not be allowed to purchase the item and it will bring you back to the initial "products" table. If there *is* sufficient quantity, the # quantity you selected to be purchased will be depleted from the stock inventory and the database will be updated accordingly. An example run of the app is shown in the screenshot below.
+
+![bamazonCustomer.js](images/bamazonCustomer.png)
 
 ### Manager.js
+In order to use this app, you must type ```node bamazonManager.js``` in your terminal window.
 
 ### Supervisor.js
+In order to use this app, you must type ```node bamazonSupervisor.js``` in your terminal window.
 
 ## Technology
 The [mysql npm package](https://www.npmjs.com/package/mysql) was used to parse through the database and manipulate and grab the data to be presented to the user.
