@@ -44,6 +44,7 @@ function initializeScreen() {
 var itemInQuestion = "";
 var quantityInQuestion = 0;
 var newQuantity = 0;
+var productSale = 0;
 
 function whatToBuy(items) {
         inquirer
@@ -80,7 +81,6 @@ function howMuchToBuy(){
                     !isNaN(value);
                     return true;
                 }
-                
             }
         )
         .then(function(response){
@@ -89,7 +89,8 @@ function howMuchToBuy(){
                 // console.log(res[i]);
                 if(res[i].product_name === itemInQuestion && res[i].stock_quantity > quantityInQuestion){
                     newQuantity = res[i].stock_quantity - quantityInQuestion;
-                    updateProduct(newQuantity, itemInQuestion);
+                    productSale = parseFloat(quantityInQuestion) * parseFloat(res[i].price)
+                    updateProduct(newQuantity, productSale, itemInQuestion);
                 }
                 else if(res[i].product_name === itemInQuestion && res[i].stock_quantity < quantityInQuestion){
                     console.log("Insufficient quantity!")
@@ -100,10 +101,10 @@ function howMuchToBuy(){
     })
 }
 
-function updateProduct(val, loc) {
+function updateProduct(val1, val2, loc) {
     console.log("Updating all" + loc + "quantities...\n");
-    query = "UPDATE products SET ? WHERE ?"
-    query = connection.query(query,[{stock_quantity: val},{product_name: loc}],
+    query = "UPDATE products SET stock_quantity = ?,product_sales = ? WHERE product_name = ?"
+    query = connection.query(query,[val1,val2,loc],
         function (err, res) {
             if (err) throw err;
             console.log(res.affectedRows + " products updated!\n");
