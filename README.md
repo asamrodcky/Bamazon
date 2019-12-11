@@ -19,6 +19,26 @@ Upon initialization, the app will present you with a table of products in the da
 ### Manager.js
 In order to use this app, you must type ```node bamazonManager.js``` in your terminal window.
 
+Upon initialization, you will be presented with a list of options to carry out. From there this application has a number of use cases:
+![initializeScreen](images/initializeScreen.png)
+
+* "View Products for Sale"
+    * The app will list every available item available for purchase as well as the item IDs, names, prices, and quantities.
+    ![viewProducts](images/viewProducts.png)
+
+* "View Low Inventory"
+    * The app will list every available item that has an inventory count less than 5.
+    ![viewLowInvetory](images/viewLow.png)
+
+* "Add to Inventory"
+    * The app will display a prompt that will allow the manager to "add more" of any item currently in the store.
+    ![addToInventory](images/addToInv.png)
+
+* "Add New Product"
+    * The app will allow the manager to add a completely new product to the store following a series of prompts.
+    ![addNewProduct](images/addNewProd.png)
+
+
 ### Supervisor.js
 In order to use this app, you must type ```node bamazonSupervisor.js``` in your terminal window.
 
