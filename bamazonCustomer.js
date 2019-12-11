@@ -16,7 +16,7 @@ connection.connect(function (err) {
 })
 
 function initializeScreen() {
-    console.log("This is running")
+    // console.log("This is running")
     var query = "SELECT * from products"
     var items = []
     connection.query(query, function (err, res) {
@@ -25,7 +25,7 @@ function initializeScreen() {
         for (var i = 0; i < res.length; i++) {
             items.push(res[i].product_name)
         };
-        // items.push("Exit")
+        items.push("Exit")
         var t = new Table;
 
         res.forEach(function (product) {
@@ -46,9 +46,6 @@ var quantityInQuestion = 0;
 var newQuantity = 0;
 
 function whatToBuy(items) {
-    var query = "SELECT * from products"
-    connection.query(query, function (err, res) {
-        if (err) throw err;
         inquirer
         .prompt([
             {
@@ -57,6 +54,24 @@ function whatToBuy(items) {
                 choices: items,
                 name: "itemToBuy"
             },
+        ])
+        .then(function (response) {
+            itemInQuestion = response.itemToBuy
+            if(itemInQuestion === "Exit"){
+                connection.end();
+            }
+            else{
+                howMuchToBuy(); 
+            }
+        })
+}
+
+function howMuchToBuy(){
+    var query = "SELECT * from products"
+    connection.query(query, function(err,res){
+        if (err) throw err;
+        inquirer
+        .prompt(
             {
                 type: "input",
                 message: "How many of this item would you like to purchase?",
@@ -65,53 +80,24 @@ function whatToBuy(items) {
                     !isNaN(value);
                     return true;
                 }
+                
             }
-        ])
-        .then(function (response) {
-            itemInQuestion = response.itemToBuy
+        )
+        .then(function(response){
             quantityInQuestion = response.quantity
-            // console.log(itemInQuestion)
-            // console.log(quantityInQuestion)
-            // console.log(res)
             for (var i = 0; i < res.length; i++) {
                 // console.log(res[i]);
                 if(res[i].product_name === itemInQuestion && res[i].stock_quantity > quantityInQuestion){
                     newQuantity = res[i].stock_quantity - quantityInQuestion;
-                    console.log(newQuantity);
                     updateProduct(newQuantity, itemInQuestion);
                 }
                 else if(res[i].product_name === itemInQuestion && res[i].stock_quantity < quantityInQuestion){
                     console.log("Insufficient quantity!")
                 }
             };
-            // if(response.itemToBuy === "Exit"){
-            //     connection.end();
-            // }
-            
             initializeScreen();
-
         })
     })
-}
-
-function createProduct() {
-    console.log("Inserting a new product...\n");
-    var query = connection.query(
-        "INSERT INTO products SET ?",
-        {
-            flavor: "Rocky Road",
-            price: 3.0,
-            quantity: 50
-        },
-        function (err, res) {
-            if (err) throw err;
-            console.log(res.affectedRows + " product inserted!\n");
-            // Call updateProduct AFTER the INSERT completes
-        }
-    );
-
-    // logs the actual query being run
-    console.log(query.sql);
 }
 
 function updateProduct(val, loc) {
@@ -126,30 +112,4 @@ function updateProduct(val, loc) {
 
     // logs the actual query being run
     console.log(query.sql);
-}
-
-function deleteProduct() {
-    console.log("Deleting all strawberry icecream...\n");
-    connection.query(
-        "DELETE FROM products WHERE ?",
-        {
-            flavor: "strawberry"
-        },
-        function (err, res) {
-            if (err) throw err;
-            console.log(res.affectedRows + " products deleted!\n");
-            // Call readProducts AFTER the DELETE completes
-            readProducts();
-        }
-    );
-}
-
-function readProducts() {
-    console.log("Selecting all products...\n");
-    connection.query("SELECT * FROM products", function (err, res) {
-        if (err) throw err;
-        // Log all results of the SELECT statement
-        console.log(res);
-        connection.end();
-    });
 }
